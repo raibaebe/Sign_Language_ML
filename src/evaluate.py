@@ -58,3 +58,39 @@ def evaluate(model_path="models/trained_model.h5", data_dir="data",
 
     plt.show()
     return {"accuracy": accuracy, "confusion_matrix": cm}
+
+
+def plot_learning_curve(history, save_path="models/learning_curve.png"):
+    """Plot training and validation accuracy/loss over epochs."""
+    epochs = range(1, len(history["accuracy"]) + 1)
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
+
+    # Accuracy
+    ax1.plot(epochs, history["accuracy"], "b-o", markersize=4, label="Training")
+    ax1.plot(epochs, history["val_accuracy"], "r-o", markersize=4, label="Validation")
+    ax1.set_title("Model Accuracy", fontsize=14)
+    ax1.set_xlabel("Epoch")
+    ax1.set_ylabel("Accuracy")
+    ax1.legend()
+    ax1.grid(True, alpha=0.3)
+
+    # Loss
+    ax2.plot(epochs, history["loss"], "b-o", markersize=4, label="Training")
+    ax2.plot(epochs, history["val_loss"], "r-o", markersize=4, label="Validation")
+    ax2.set_title("Model Loss", fontsize=14)
+    ax2.set_xlabel("Epoch")
+    ax2.set_ylabel("Loss")
+    ax2.legend()
+    ax2.grid(True, alpha=0.3)
+
+    fig.suptitle("Learning Curve", fontsize=16, fontweight="bold")
+    plt.tight_layout()
+
+    if save_path:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        fig.savefig(save_path, dpi=150)
+        print(f"\nLearning curve saved to {save_path}")
+
+    plt.show()
+    return fig

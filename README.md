@@ -12,13 +12,14 @@ sign_language_ml/
 │   └── collected/            # Webcam-collected training data
 ├── models/
 │   ├── trained_model.h5
-│   └── confusion_matrix.png
+│   ├── confusion_matrix.png
+│   └── learning_curve.png
 ├── src/
 │   ├── data_loader.py        # MNIST CSV + collected data loading
 │   ├── preprocessing.py      # Normalization, reshaping, augmentation
 │   ├── model.py              # CNN architecture
 │   ├── train.py              # Training pipeline
-│   ├── evaluate.py           # Metrics and confusion matrix
+│   ├── evaluate.py           # Metrics, confusion matrix, learning curve
 │   ├── landmark_extractor.py # MediaPipe hand detection
 │   ├── predict.py            # Webcam and image prediction
 │   └── collect.py            # Webcam data collection tool
@@ -29,6 +30,8 @@ sign_language_ml/
 ## Setup
 
 ```bash
+python -m venv .venv
+.venv\Scripts\activate        # Windows
 pip install -r requirements.txt
 ```
 
@@ -44,7 +47,7 @@ python main.py train
 
 Options: `--epochs 30`, `--batch-size 64`, `--no-augmentation`, `--model-path models/trained_model.h5`
 
-Automatically merges MNIST data with any webcam-collected data in `data/collected/`.
+Automatically merges MNIST data with any webcam-collected data in `data/collected/`. After training, a learning curve plot is saved to `models/learning_curve.png`.
 
 ### Evaluate
 
@@ -83,12 +86,14 @@ Show a hand gesture and press the corresponding letter key to capture frames. Pr
 ## Model
 
 ```
-Conv2D(32) -> BN -> MaxPool -> Dropout(0.25)
-Conv2D(64) -> BN -> MaxPool -> Dropout(0.25)
-Dense(256) -> BN -> Dropout(0.5) -> Dense(25, softmax)
+Conv2D(32) -> BN -> Conv2D(32) -> BN -> MaxPool -> Dropout(0.25)
+Conv2D(64) -> BN -> Conv2D(64) -> BN -> MaxPool -> Dropout(0.25)
+Flatten -> Dense(256) -> BN -> Dropout(0.5) -> Dense(25, softmax)
 ```
 
-Input: 28x28 grayscale. Output: 25 classes (A-I, K-Y).
+Input: 28x28 grayscale. Output: 25 classes (A-I, K-Y). Optimizer: Adam. Loss: categorical crossentropy.
+
+Training uses early stopping (patience 5), model checkpointing, and learning rate reduction on plateau.
 
 ## Dataset
 

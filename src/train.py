@@ -7,6 +7,7 @@ from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLRO
 from src.data_loader import load_dataset, load_collected_data
 from src.preprocessing import preprocess_pipeline, create_augmenter
 from src.model import build_cnn, save_trained_model
+from src.evaluate import plot_learning_curve
 
 
 def train(
@@ -69,4 +70,8 @@ def train(
     print(f"\nTest accuracy: {test_acc:.4f}  Test loss: {test_loss:.4f}")
 
     save_trained_model(model, model_path)
+
+    curve_path = os.path.join(os.path.dirname(model_path), "learning_curve.png")
+    plot_learning_curve(history.history, save_path=curve_path)
+
     return history.history
