@@ -4,10 +4,10 @@ import os
 import numpy as np
 import pandas as pd
 
-# Label 0-24 -> letter A-Y (skipping J at index 9)
-LABEL_TO_LETTER = {i: chr(ord('A') + i + (1 if i >= 9 else 0)) for i in range(25)}
+# Label 0-23 -> letter A-Y (skipping J and Z which require motion)
+LABEL_TO_LETTER = {i: chr(ord('A') + i + (1 if i >= 9 else 0)) for i in range(24)}
 LETTER_TO_LABEL = {v: k for k, v in LABEL_TO_LETTER.items()}
-NUM_CLASSES = 25
+NUM_CLASSES = 24
 IMG_SIZE = 28
 
 
