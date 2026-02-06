@@ -1,7 +1,7 @@
 # Sign Language Gesture Recognition
 
 CNN-based recognition of 24 static ASL hand gestures (A-I, K-Y) trained on Sign Language MNIST, with real-time webcam prediction using MediaPipe hand detection.
-
+ "SIS WORK for DISTRO"
 ## Project Structure
 
 ```
